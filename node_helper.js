@@ -447,7 +447,15 @@ module.exports = NodeHelper.create({
 //																	  //
 //********************************************************************//
 
-		else if (/(ROTATE)/g.test(data) && /(LAYER)/g.test(data)) {
+        else if (/(PLAY)/g.test(data) && /(ANIMATION)/g.test(data)) {
+            this.sendSocketNotification('PLAY_ANIMATION')
+        }
+
+        else if (/(STOP)/g.test(data) && /(ANIMATION)/g.test(data)) {
+            this.sendSocketNotification('STOP_ANIMATION')
+        }
+
+        else if (/(ROTATE)/g.test(data) && /(LAYER)/g.test(data)) {
             this.sendSocketNotification('ROTATE_LAYER')
         }
 

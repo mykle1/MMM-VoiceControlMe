@@ -205,7 +205,9 @@ Module.register('MMM-VoiceControlMe', {
 	  'SHOW ME CURRENTS',
       'SHOW ME WAVES',
       'SHOW DEFAULT ZOOM',
-      'ROTATE LAYER'
+      'ROTATE LAYER',
+      'PLAY ANIMATION',
+      'STOP ANIMATION'
         ]
     },
 
@@ -650,6 +652,11 @@ Module.register('MMM-VoiceControlMe', {
         } else if (notification=== 'DEFAULT_ZOOM') {
 			this.sendNotification('DEFAULTZOOM');
 
+        } else if (notification=== 'PLAY_ANIMATION') {
+            this.sendNotification('PLAYANIMATION');
+            
+        } else if (notification=== 'STOP_ANIMATION') {
+			this.sendNotification('STOPANIMATION');
 ////////////////////////////////////////////////////////////////////////
 /////////////// 	   	  Enhanced by @TheStigh to		////////////////
 ///////////////			show/hide by core messages 		////////////////
