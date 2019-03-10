@@ -451,8 +451,8 @@ module.exports = NodeHelper.create({
             this.sendSocketNotification('PLAY_ANIMATION')
         }
 
-        else if (/(STOP)/g.test(data) && /(ANIMATION)/g.test(data)) {
-            this.sendSocketNotification('STOP_ANIMATION')
+        else if (/(CANCEL)/g.test(data) && /(ANIMATION)/g.test(data)) {
+            this.sendSocketNotification('CANCEL_ANIMATION')
         }
 
         else if (/(ROTATE)/g.test(data) && /(LAYER)/g.test(data)) {
