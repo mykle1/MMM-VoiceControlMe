@@ -245,7 +245,11 @@ Module.register('MMM-VoiceControlMe', {
 		pageTenModules: [],                     // modules to show on page two
 		captureIntervalTime: 1000,              // how often should the webcam check for motion, in milliseconds, default 1 second
         scoreThreshold: 20,                     // threshold to assume motion/no-motion -> se console log for score
-        timeoutMotion: 120000                   // timeout with no motion until sleep monitor, in milliseconds, default 2 minutes
+        timeoutMotion: 120000,                  // timeout with no motion until sleep monitor, in milliseconds, default 2 minutes
+        muteThreshold: 2000,                    // motion level to activate mute of speaker
+        muteVolumeLevel: 1,                     // what volume level to set speaker on activated mute
+        muteNormalLevel: 50,                    // set normal volume level on startup
+        muteTimer: 10000                        // how long in milliseconds to mute the speaker
     },
 
     lastTimeMotionDetected: null,
@@ -264,6 +268,7 @@ Module.register('MMM-VoiceControlMe', {
 		Log.info(`Starting module: ${this.name}`);
         this.mode = this.translate('INIT');
         this.modules.push(this.voice);
+        this.sendSocketNotification('RESTORE_MIC',this.config.muteNormalLevel);
         Log.info(`${this.name} is waiting for voice command registrations.`);
 		var pageOne = MM.getModules().withClass(this.config.mainPageModules);
 		var pageTwo = MM.getModules().withClass(this.config.pageTwoModules);
@@ -305,14 +310,24 @@ Module.register('MMM-VoiceControlMe', {
 				},
 				captureCallback: function(payload) {
 					const score = payload.score;	
-					if (score > _this.config.scoreThreshold) {
+                    if (score > _this.config.muteThreshold) {
+                        Log.info('<<<>>> Muting volume!!');
+                        _this.sendSocketNotification('MUTE_MIC',_this.config.muteVolumeLevel);
+                            setTimeout(function(){ 
+                                Log.info('<<<>>> Restoring volume!!');
+                                _this.sendSocketNotification('RESTORE_MIC');
+                            }, _this.config.muteTimer);
+                    }
+                    
+                    else if (score < _this.config.muteThreshold && score > _this.config.scoreThreshold) {
 						_this.lastTimeMotionDetected = new Date();
 						if (_this.poweredOff) {
 							_this.poweredOff = false;
 							_this.sendSocketNotification('ACTIVATE_MONITOR');
 							console.log('MOTION DETECTED, turning monitor on!');
 						}
-					}
+                    }
+
 					else {
 						const currentDate = new Date(),
 							time = currentDate.getTime() - _this.lastTimeMotionDetected;

@@ -124,6 +124,13 @@ module.exports = NodeHelper.create({
 			if(this.config.standByMethod === 'PI')  		/////////// Turns off HDMI on Pi
 				exec('/opt/vc/bin/tvservice -o', null);
 				this.hdmi = false;		
+    
+        } else if(notification ==='MUTE_MIC') {
+            exec('amixer sset -M Master '+this.config.muteVolumeLevel, null);
+        
+        } else if(notification ==='RESTORE_MIC') {
+            exec('amixer sset -M Master '+this.config.muteNormalLevel, null);
+    
         }
     },
 
