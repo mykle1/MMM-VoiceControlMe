@@ -25,6 +25,25 @@
 
 'use strict';
 
+var sentence;
+ function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+          console.log("I have the file");
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+  }
+
+readTextFile("modules/MMM-VoiceControlMe/sentences.txt", function(text){
+  console.log(text);
+  sentence = text;
+  console.log(sentence);
+})
+
 Module.register('MMM-VoiceControlMe', {
 
     /** @member {string} icon - Microphone icon. */
@@ -223,6 +242,7 @@ Module.register('MMM-VoiceControlMe', {
      */
     defaults: {
         timeout: 10,                            // timeout listening for a command/sentence
+        defaultOnStartup: 'MMM-VoiceControlMe',
         keyword: 'HELLO LUCY',                  // keyword to activate listening for a command/sentence
         debug: false,                           // get debug information in console
         standByMethod: 'DPMS',                  // 'DPMS' = anything else than RPi or 'PI'
@@ -270,16 +290,6 @@ Module.register('MMM-VoiceControlMe', {
         this.modules.push(this.voice);
         this.sendSocketNotification('RESTORE_MIC',this.config.muteNormalLevel);
         Log.info(`${this.name} is waiting for voice command registrations.`);
-		var pageOne = MM.getModules().withClass(this.config.mainPageModules);
-		var pageTwo = MM.getModules().withClass(this.config.pageTwoModules);
-		var pageThree = MM.getModules().withClass(this.config.pageThreeModules);
-		var pageFour = MM.getModules().withClass(this.config.pageFourModules);
-		var pageFive = MM.getModules().withClass(this.config.pageFiveModules);
-		var pageSix = MM.getModules().withClass(this.config.pageSixModules);
-		var pageSeven = MM.getModules().withClass(this.config.pageSevenModules);
-		var pageEight = MM.getModules().withClass(this.config.pageEightModules);
-		var pageNine = MM.getModules().withClass(this.config.pageNineModules);
-		var pageTen = MM.getModules().withClass(this.config.pageTenModules);
 
 		if (this.config.activateMotion) {
 			Log.info('DETECTOR: starting up');
@@ -315,7 +325,7 @@ Module.register('MMM-VoiceControlMe', {
                         _this.sendSocketNotification('MUTE_MIC',_this.config.muteVolumeLevel);
                             setTimeout(function(){ 
                                 Log.info('<<<>>> Restoring volume!!');
-                                _this.sendSocketNotification('RESTORE_MIC');
+                                _this.sendSocketNotification('RESTORE_MIC',_this.config.muteNormalLevel);
                             }, _this.config.muteTimer);
                     }
                     
@@ -513,6 +523,15 @@ Module.register('MMM-VoiceControlMe', {
 
        if (notification === 'DOM_OBJECTS_CREATED'){
 			var showOnStart = MM.getModules().withClass(self.config.mainPageModules);
+            
+            showOnStart.enumerate(function(module) {
+                var callback = function(){};
+                module.show(self.config.speed, callback);
+				});
+        }
+        
+        if (notification === 'DOM_OBJECTS_CREATED'){
+			var showOnStart = MM.getModules().withClass(self.config.defaultOnStartup);
             
             showOnStart.enumerate(function(module) {
                 var callback = function(){};

@@ -126,10 +126,12 @@ module.exports = NodeHelper.create({
 				this.hdmi = false;		
     
         } else if(notification ==='MUTE_MIC') {
-            exec('amixer sset -M Master '+this.config.muteVolumeLevel, null);
+            this.config = payload;
+            exec('amixer sset -M Master '+this.config, null);
         
         } else if(notification ==='RESTORE_MIC') {
-            exec('amixer sset -M Master '+this.config.muteNormalLevel, null);
+            this.config = payload;
+            exec('amixer sset -M Master '+this.config, null);
     
         }
     },
