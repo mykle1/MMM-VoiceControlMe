@@ -148,9 +148,11 @@ module.exports = NodeHelper.create({
         words = words.concat(temp);
         for (let i = 0; i < this.modules.length; i += 1) {
             const mode = this.modules[i].mode.split(' ');
+            //console.log('<<<>>> NODE HELPER modes: '+mode);
             words = words.concat(mode);
             for (let n = 0; n < this.modules[i].sentences.length; n += 1) {
                 const sentences = this.modules[i].sentences[n].split(' ');
+                //console.log('<<<>>> NODE HELPER SENTENCES: '+sentences);
                 words = words.concat(sentences);
             }
         }
