@@ -1,0 +1,10 @@
+{
+"modOp":[
+  {"wordOne":"SHOW","wordTwo":"LUCY","wordThree":"","wordFour":"","toShow":"true","moduleName":"MMM-EasyPix","sendNoti":""},
+  {"wordOne":"HIDE","wordTwo":"GHOST","wordThree":"","wordFour":"","toShow":"false","moduleName":"MMM-WindyV2","sendNoti":""},
+  {"wordOne":"SHOW","wordTwo":"GHOST","wordThree":"","wordFour":"","toShow":"true","moduleName":"MMM-WindyV2","sendNoti":""},
+  {"wordOne":"SHOW","wordTwo":"ME","wordThree":"LUCY","wordFour":"WIND","toShow":"true","moduleName":"MMM-WindyV2","sendNoti":""},
+  {"wordOne":"SHOW","wordTwo":"CAMERA","wordThree":"","wordFour":"","toShow":"false","moduleName":"","sendNoti":"SHOW_CAMERA"},
+  {"wordOne":"HIDE","wordTwo":"CAMERA","wordThree":"","wordFour":"","toShow":"false","moduleName":"","sendNoti":"HIDE_CAMERA"}
+  ]
+}

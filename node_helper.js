@@ -1,7 +1,6 @@
 /**
  * @file node_helper.js
  *
-/**
  * @originalAuthor fewieden MMM-VoiceControlMe
  * @inspirationalModules Hello-Lucy MMM-ModuleToggle MMM-Hotword MMM-AssistantMk2 MMM-MotionDetector
  * @extended  by TheStigh, Mykle1 and Sdetweil
@@ -11,77 +10,55 @@
  * @see  https://github.com/Mykle1/MMM-VoiceControlMe
 
 /**
- * @external pocketsphinx-continuous
- * @see https://github.com/fewieden/pocketsphinx-continuous-node
- */
-const Psc = require('pocketsphinx-continuous');
-
-/**
- * @external fs
- * @see https://nodejs.org/api/fs.html
- */
-const fs = require('fs');
-
-/**
+ * @external pocketsphinx-continuous @see https://github.com/fewieden/pocketsphinx-continuous-node
+ * @external fs @see https://nodejs.org/api/fs.html 
  * @external child_process		@see https://nodejs.org/api/child_process.html
- */
-const exec = require('child_process').exec;
-
-/**
  * @external lmtool				@see https://www.npmjs.com/package/lmtool
- */
+ * @module Bytes @description Pure Magic
+ * @external node_helper 		@see https://github.com/MichMich/MagicMirror/blob/master/modules/node_modules/node_helper/index.js */
+
+const Psc = require('pocketsphinx-continuous');
+const fs = require('fs');
+const exec = require('child_process').exec;
 const lmtool = require('lmtool');
-
-/**
- * @module Bytes 
- * @description Pure Magic
- */
 const bytes = require('./Bytes.js');
-
-/**
- * @external node_helper 		@see https://github.com/MichMich/MagicMirror/blob/master/modules/node_modules/node_helper/index.js
- */
 const NodeHelper = require('node_helper');
 
-/**
- * @module node_helper
- * @description Backend for the module to query data from the API providers.
- *
- * @requires external:pocketsphinx-continuous
- * @requires external:fs
- * @requires external:child_process
- * @requires external:lmtool
- * @requires Bytes
- * @requires external:node_helper
- */
+
+/** @preparing for import for new function of checkCommands() */
+
+var firstWord, secWord, thirdWord, fourthWord, modName, trueFalse, otherFunc, sendNoti
+
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+
+var loadingRules=fs.readFileSync('modules/MMM-VoiceControlMe/test.json', 'utf8');
+var importedWords = JSON.parse(loadingRules);
+//console.log(importedWords);
+
 module.exports = NodeHelper.create({
 
     /** @member {boolean} listening - Flag to indicate listen state. */
-    listening: false,
-
     /** @member {(boolean|string)} mode - Contains active module mode. */
-    mode: false, // was false,
-
     /** @member {string[]} words - List of all words that are registered by the modules. */
+
+    listening: false,
+    mode: false, // was false,
     words: [],
 	
-    /**
-     * @function start
-     * @description Logs a start message to the console.
-     * @override
-     */
     start() {
         console.log(`Starting module helper: ${this.name}`);
     },
 
-    /**
-     * @function socketNotificationReceived
-     * @description Receives socket notifications from the module.
-     * @override
-     *
-     * @param {string} notification - Notification name
-     * @param {*} payload - Detailed payload of the notification.
-     */
     socketNotificationReceived(notification, payload) {
         if (notification === 'START') {
             /** @member {Object} config - Module config. */
@@ -126,10 +103,12 @@ module.exports = NodeHelper.create({
 				this.hdmi = false;		
     
         } else if(notification ==='MUTE_MIC') {
-            exec('amixer sset -M Master '+this.config.muteVolumeLevel, null);
+            this.config = payload;
+            exec('amixer sset -M Master '+this.config, null);
         
         } else if(notification ==='RESTORE_MIC') {
-            exec('amixer sset -M Master '+this.config.muteNormalLevel, null);
+            this.config = payload;
+            exec('amixer sset -M Master '+this.config, null);
     
         }
     },
@@ -146,9 +125,11 @@ module.exports = NodeHelper.create({
         words = words.concat(temp);
         for (let i = 0; i < this.modules.length; i += 1) {
             const mode = this.modules[i].mode.split(' ');
+            //console.log('<<<>>> NODE HELPER modes: '+mode);
             words = words.concat(mode);
             for (let n = 0; n < this.modules[i].sentences.length; n += 1) {
                 const sentences = this.modules[i].sentences[n].split(' ');
+                //console.log('<<<>>> NODE HELPER SENTENCES: '+sentences);
                 words = words.concat(sentences);
             }
         }
@@ -436,9 +417,7 @@ module.exports = NodeHelper.create({
 			if(this.config.standByMethod === 'PI')  		/////////// Turns off HDMI on Pi
 				exec('/opt/vc/bin/tvservice -o', null);
 				this.hdmi = false;
-        }
-		
-
+        
 ////////////////////////////////////////////////////////////////////////
 ////////////////	 	   Enhanced by @TheStigh		////////////////
 //////////////// 		to toggle show/hide modules 	////////////////
@@ -454,477 +433,48 @@ module.exports = NodeHelper.create({
 //																	  //
 //********************************************************************//
 
-        else if (/(PLAY)/g.test(data) && /(ANIMATION)/g.test(data)) {
-            this.sendSocketNotification('PLAY_ANIMATION')
-        }
-
-        else if (/(CANCEL)/g.test(data) && /(ANIMATION)/g.test(data)) {
-            this.sendSocketNotification('CANCEL_ANIMATION')
-        }
-
-        else if (/(ROTATE)/g.test(data) && /(LAYER)/g.test(data)) {
-            this.sendSocketNotification('ROTATE_LAYER')
-        }
-
-        else if (/(ZOOM)/g.test(data) && /(IN)/g.test(data)) {
-            this.sendSocketNotification('ZOOM_IN');
-        }
-
-        else if (/(ZOOM)/g.test(data) && /(OUT)/g.test(data)) {
-            this.sendSocketNotification('ZOOM_OUT');
-        }
-
-        else if (/(SHOW)/g.test(data) && /(DEFAULT)/g.test(data) && /(ZOOM)/g.test(data)) {
-			this.sendSocketNotification('DEFAULT_ZOOM');
-		}
-        
-        else if (/(SHOW)/g.test(data) && /(ME)/g.test(data) && /(WIND)/g.test(data)) {
-			this.sendSocketNotification('CHANGE_WIND');
-		}
-
-        else if (/(SHOW)/g.test(data) && /(ME)/g.test(data) && /(RAIN)/g.test(data)) {
-			this.sendSocketNotification('CHANGE_RAIN');
-		}
-
-        else if (/(SHOW)/g.test(data) && /(ME)/g.test(data) && /(CLOUDS)/g.test(data)) {
-			this.sendSocketNotification('CHANGE_CLOUDS');
-		}
-
-        else if (/(SHOW)/g.test(data) && /(ME)/g.test(data) && /(TEMPERATURE)/g.test(data)) {
-			this.sendSocketNotification('CHANGE_TEMP');
-		}			
-
-        else if (/(SHOW)/g.test(data) && /(ME)/g.test(data) && /(PRESSURE)/g.test(data)) {
-			this.sendSocketNotification('CHANGE_PRESSURE');
-		}			
-
-        else if (/(SHOW)/g.test(data) && /(ME)/g.test(data) && /(CURRENTS)/g.test(data)) {
-			this.sendSocketNotification('CHANGE_CURRENTS');
-		}			
-
-        else if (/(SHOW)/g.test(data) && /(ME)/g.test(data) && /(WAVES)/g.test(data)) {
-			this.sendSocketNotification('CHANGE_WAVES');
-		}
-		
-        else if (/(TAKE)/g.test(data) && /(SELFIE)/g.test(data)) {
-            this.sendSocketNotification('TAKE_SELFIE');
-        }
-
-        else if (/(SHOW)/g.test(data) && /(MODULES)/g.test(data)) {
-            this.sendSocketNotification('SHOW_MODULES');
-        } 
-		
-		else if (/(HIDE)/g.test(data) && /(MODULES)/g.test(data)) {
-            this.sendSocketNotification('HIDE_MODULES');
-        }
-
-        else if (/(SHOW)/g.test(data) && /(CAMERA)/g.test(data)) {
-			this.sendSocketNotification('SHOW_CAMERA');
-        } 
-		
-		else if (/(HIDE)/g.test(data) && /(CAMERA)/g.test(data)) {
-			this.sendSocketNotification('HIDE_CAMERA');
-        }
-
-        else if (/(SHOW)/g.test(data) && /(GHOST)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-EasyPix2"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(GHOST)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-EasyPix2"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(LUCY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-EasyPix"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(LUCY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-EasyPix"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(VOICE)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-VoiceControlMe"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(VOICE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-VoiceControlMe"], show: [], toggle:[]});
-        }
-
-         else if (/(SHOW)/g.test(data) && /(WEATHER)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["currentweather"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(WEATHER)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: ["currentweather"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(WIND)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-WindyV2"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(WIND)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-WindyV2"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(FORECAST)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["weatherforecast"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(FORECAST)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["weatherforecast"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(TOOLS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Tools"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(TOOLS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Tools"], show: [], toggle:[]});
-        }
-		
-        else if (/(SHOW)/g.test(data) && /(CHANNEL)/g.test(data) && /(ONE)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-iFrame-Ping"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(CHANNEL)/g.test(data) && /(ONE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-iFrame-Ping"], show: [], toggle:[]});
-        }
-		
-		else if (/(SHOW)/g.test(data) && /(CHANNEL)/g.test(data) && /(WALL)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-iFrame-Ping"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(CHANNEL)/g.test(data) && /(WALL)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-iFrame-Ping"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(CHANNEL)/g.test(data) && /(TWO)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-iFrame-Ping-2"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(CHANNEL)/g.test(data) && /(TWO)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-iFrame-Ping-2"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(CHANNEL)/g.test(data) && /(THREE)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-iFrame-Ping-3"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(CHANNEL)/g.test(data) && /(THREE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-iFrame-Ping-3"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(CHANNEL)/g.test(data) && /(FOUR)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-iFrame-Ping-4"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(CHANNEL)/g.test(data) && /(FOUR)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-iFrame-Ping-4"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(SKY)/g.test(data) && /(NEWS)/g.test(data)) {
- 			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-iFrame-Ping-4"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(SKY)/g.test(data) && /(NEWS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-iFrame-Ping-4"], show: [], toggle:[]});
-        }
-										
-		else if (/(SHOW)/g.test(data) && /(ASSISTANT)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-AssistantMk2"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(ASSISTANT)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-AssistantMk2"], show: [], toggle:[]});
-        }
-		
-		else if (/(SHOW)/g.test(data) && /(BACKGROUND)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-GoogleMapsTraffic"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(BACKGROUND)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-GoogleMapsTraffic"], show: [], toggle:[]});
-		}
-
-	    else if (/(SHOW)/g.test(data) && /(CALENDAR)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["calendar"], toggle:[]});
-		} else if (/(HIDE)/g.test(data) && /(CALENDAR)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["calendar"], show: [], toggle:[]});
-		}
-
-		 else if (/(SHOW)/g.test(data) && /(CLOCK)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["clock"], toggle:[]});
-		} else if (/(HIDE)/g.test(data) && /(CLOCK)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["clock"], show: [], toggle:[]});
-		}
-
-		else if (/(SHOW)/g.test(data) && /(COMPLIMENTS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["compliments"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(COMPLIMENTS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["compliments"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(ALARM)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Alarm-Clock"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(ALARM)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Alarm-Clock"], show: [], toggle:[]});
-		}
-		
-		else if (/(SHOW)/g.test(data) && /(COCKTAILS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Cocktails"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(COCKTAILS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Cocktails"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(CARDS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-CARDS"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(CARDS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-CARDS"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(CENSUS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Census"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(CENSUS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Census"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(COWBOY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-NOAA"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(COWBOY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-NOAA"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(DARWIN)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-EOL"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(DARWIN)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-EOL"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(EARTH)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-EARTH"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(EARTH)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-EARTH"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(EYECANDY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-EyeCandy"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(EYECANDY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-EyeCandy"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(EVENTS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Events"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(EVENTS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Events"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(FAX)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-rfacts"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(FAX)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-rfacts"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(FORTUNE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Fortune"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(FORTUNE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Fortune"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(GAS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Gas"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(GAS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Gas"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(JEOPARDY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-JEOPARDY"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(JEOPARDY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-JEOPARDY"], show: [], toggle:[]});
-        }
-
-		 else if (/(SHOW)/g.test(data) && /(LICE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-LICE"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(LICE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-LICE"], show: [], toggle:[]});
-        }
-
-		 else if (/(SHOW)/g.test(data) && /(LOCATION)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-URHere"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(LOCATION)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-URHere"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(LOTTERY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Lottery"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(LOTTERY)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Lottery"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(MOON)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Lunartic"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(MOON)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Lunartic"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(NASA)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-NASA"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(NASA)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-NASA"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(NEO)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-NEO"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(NEO)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-NEO"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(NEWS)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["newsfeed"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(NEWS)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["newsfeed"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(PETFINDER)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-PetFinder"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PETFINDER)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-PetFinder"], show: [], toggle:[]});
-        }
-
-        else if (/(SHOW)/g.test(data) && /(PHONE)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-FMI"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PHONE)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-FMI"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(PICTURES)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-ImageSlideshow"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PICTURES)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-ImageSlideshow"], show: [], toggle:[]});
-        }
-
-         else if (/(SHOW)/g.test(data) && /(PILOTS)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-PilotWX"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PILOTS)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-PilotWX"], show: [], toggle:[]});
-        }
-
-		 else if (/(SHOW)/g.test(data) && /(SHIPPING)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-AfterShip"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(SHIPPING)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-AfterShip"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(STATION)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-ISS"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(STATION)/g.test(data)) {
-            this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-ISS"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(STATS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-PC-Stats"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(STATS)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-PC-Stats"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(SUDOKU)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-Sudoku"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(SUDOKU)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-Sudoku"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(SUNRISE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-SunRiseSet"], toggle:[]});
-		} else if (/(HIDE)/g.test(data) && /(SUNRISE)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-SunRiseSet"], show: [], toggle:[]});
-		}
-
-		else if (/(SHOW)/g.test(data) && /(TIDES)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-SORT"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(TIDES)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-SORT"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(TIMER)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-EventHorizon"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(TIMER)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-EventHorizon"], show: [], toggle:[]});
-        }
-
-		else if (/(SHOW)/g.test(data) && /(TRIVIA)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: ["MMM-ATM"], toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(TRIVIA)/g.test(data)) {
-			this.sendSocketNotification('MODULE_STATUS',{hide: ["MMM-ATM"], show: [], toggle:[]});
-        }
-	    
-////////////////////////////////////////////////////////////////////////
-//////////////// 			 Made by @Mykle1			////////////////
-//////////////// 			 PAGES BY VOICE				////////////////
-////////////////										////////////////	
-//////////////// 	   	  Enhanced by @TheStigh to		////////////////
-////////////////	  reduce script and notifications 	////////////////
-////////////////////////////////////////////////////////////////////////
-
-////////////////			  Page 1 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(MAIN)/g.test(data) && /(PAGE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.mainPageModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(MAIN)/g.test(data) && /(PAGE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 2 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(TWO)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageTwoModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(TWO)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 3 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(THREE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageThreeModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(THREE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 4 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(FOUR)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageFourModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(FOUR)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 5 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(FIVE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageFiveModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(FIVE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 6 commands 			////////////////
-
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(SIX)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageSixModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(SIX)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 7 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(SEVEN)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageSevenModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(SEVEN)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 8 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(EIGHT)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageEightModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(EIGHT)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 9 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(NINE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageNineModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(NINE)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////			  Page 10 commands 			////////////////
-		else if (/(SHOW)/g.test(data) && /(PAGE)/g.test(data) && /(TEN)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-			this.sendSocketNotification('MODULE_STATUS',{hide: [], show: this.config.pageTenModules, toggle:[]});
-        } else if (/(HIDE)/g.test(data) && /(PAGE)/g.test(data) && /(TEN)/g.test(data)) {
-			this.sendSocketNotification('HIDE_MODULES');
-        }
-
-////////////////////////////////// EOC /////////////////////////////////	
-
-         else if (/(HELP)/g.test(data)) {
-            if (/(CLOSE)/g.test(data) || (this.help && !/(OPEN)/g.test(data))) {
-                this.sendSocketNotification('CLOSE_HELP');
-                this.help = false;
-            } else if (/(OPEN)/g.test(data) || (!this.help && !/(CLOSE)/g.test(data))) {
-                this.sendSocketNotification('OPEN_HELP');
-                this.help = true;
-            }
+        } else {     
+        for (var xx = 0, l = importedWords.modOp.length; xx < l;) {
+            var firstW = JSON.stringify(importedWords.modOp[xx].wordOne);
+            var secW = JSON.stringify(importedWords.modOp[xx].wordTwo);
+            var thirdW = JSON.stringify(importedWords.modOp[xx].wordThree);
+            var fourthW = JSON.stringify(importedWords.modOp[xx].wordFour);
+            var modN = JSON.stringify(importedWords.modOp[xx].moduleName);
+            var Tf = JSON.stringify(importedWords.modOp[xx].toShow);
+            var oF = JSON.stringify(importedWords.modOp[xx].otherFunc);
+            var sN = JSON.stringify(importedWords.modOp[xx].sendNoti);
+            firstWord = firstW.replace(/"/g, "");
+            secWord = secW.replace(/"/g, "");
+            thirdWord = thirdW.replace(/"/g, "");
+            fourthWord = fourthW.replace(/"/g, "");
+            modName = modN.replace(/"/g, "");
+            trueFalse = Tf.replace(/"/g, "");
+            sendNoti = sN.replace(/"/g, "");
+            this.firstWord = RegExp(firstWord);
+            this.secWord = RegExp(secWord);
+            this.thirdWord = RegExp(thirdWord);
+            this.fourthWord = RegExp(fourthWord);
+            this.modName = modName;
+            this.trueFalse = trueFalse;
+            this.sendNoti = sendNoti;
+////////////////////////////////////////////////////////////////////////////////    
+                if (this.firstWord.test(data) && this.secWord.test(data) && this.thirdWord.test(data) && this.fourthWord.test(data)) {
+                    console.log('>>> modName & sendNoti : '+this.modName+' '+this.sendNoti);
+                    if (this.modName != "") {    
+                        if (this.trueFalse === "true") {
+                            //console.log('>>> Treff på ord med TRUE aktiv, verdi av toShow er: '+this.trueFalse);
+                            //console.log('>>> Treff SHOW: Første ord: '+this.firstWord+' Andre ord: '+this.lastWord+' Tf: '+this.trueFalse);
+                                this.sendSocketNotification('MODULE_STATUS',{hide: [], show: [this.modName], toggle:[]});
+                            } else { 
+                            //    console.log('<<<>>> Treff HIDE:: '+this.trueFalse);
+                                this.sendSocketNotification('MODULE_STATUS',{hide: [this.modName], show: [], toggle:[]});
+                            }
+                        } else {
+                        this.sendSocketNotification('MODULE_UPDATE',this.sendNoti);
+                    }
+////////////////////////////////////////////////////////////////////////////////
+                };xx++; 
+            };
         }
     }
 	

@@ -1,255 +1,91 @@
 /**
- * @file MMM-VoiceControlMe.js
+ * @file MMM-VoiceControlMe.js @see  https://github.com/Mykle1/MMM-VoiceControlMe
  *
  * @originalAuthor fewieden MMM-voice
  * @inspirationalModules Hello-Lucy MMM-ModuleToggle MMM-Hotword MMM-AssistantMk2 MMM-MotionDetector
- * @extended by TheStigh, Mykle1 and Sdetweil
+ * @extended by TheStigh, Mykle1, cowboysdude and Sdetweil
  *
  * @license MIT
  *
- * @see  https://github.com/Mykle1/MMM-VoiceControlMe
- */
-
-/* global Module Log MM */
-
-/**
  * @external Module   @see https://github.com/MichMich/MagicMirror/blob/master/js/module.js
  * @external Log      @see https://github.com/MichMich/MagicMirror/blob/master/js/logger.js
  * @external MM 	  @see https://github.com/MichMich/MagicMirror/blob/master/js/main.js
  *
  * @module MMM-VoiceControlMe
- * @description Frontend for the module to display data.
  *
  * @requires external:Module, Log and MM
  */
 
+ ////////////////////////////////////////////////////
+
 'use strict';
+
+var importedSentences;                              /** Prepare variable to be populated from import. */
+function readTextFile(file, callback) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+    rawFile.onreadystatechange = function() {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+            callback(rawFile.responseText);
+        }
+    }
+    rawFile.send(null);
+}
+readTextFile("modules/MMM-VoiceControlMe/sentences.json", function(text){
+    var tempImport = JSON.parse(text);
+    importedSentences = tempImport;
+    console.log('SENTENCE: '+importedSentences);
+});
+
+////////////////////////////////////////////////////
 
 Module.register('MMM-VoiceControlMe', {
 
-    /** @member {string} icon - Microphone icon. */
-    icon: 'fa-microphone-slash',
-    /** @member {boolean} pulsing - Flag to indicate listening state. */
-    pulsing: true,
-    /** @member {boolean} help - Flag to switch between render help or not. */
-    help: false,
-
-////////////////////////////////////////////////////////////////////////
-//////////////// 		Done by @sdetweil to			////////////////
-//////////////// 	release mic from PocketSphinx		////////////////
-////////////////////////////////////////////////////////////////////////
-	timeout: null, 
     
-	
-////////////////////////////////// EOC /////////////////////////////////
-	
-    /**
-     * @member {Object} voice - Defines the default mode and commands of this module.
-     * @property {string} mode - Voice mode of this module.
-     * @property {string[]} sentences - List of voice commands of this module.
-     */
-
-
-///////////// Add your commands to the sentences array below ///////////////////
-
-    voice: {
-	mode: 'VOICE',
-	sentences: [
-	  'HIDE ALARM',
-	  'SHOW ALARM',
-	  'HIDE BACKGROUND',
-	  'SHOW BACKGROUND',
-	  'HIDE CALENDAR',
-	  'SHOW CALENDAR',
-      'SHOW CARDS',
-      'HIDE CENSUS',
-      'SHOW CENSUS',
-      'HIDE CLOCK',
-      'SHOW CLOCK',
-      'HIDE COCKTAILS',
-      'SHOW COCKTAILS',
-      'HIDE COMPLIMENTS',
-      'SHOW COMPLIMENTS',
-      'HIDE COWBOY',
-      'SHOW COWBOY',
-      'HIDE DARWIN',
-      'SHOW DARWIN',
-      'HIDE EARTH',
-      'SHOW EARTH',
-      'HIDE EYECANDY',
-      'SHOW EYECANDY',
-      'HIDE EVENTS',
-      'SHOW EVENTS',
-      'HIDE FAX',
-      'SHOW FAX',
-      'HIDE FLIPPER',
-      'SHOW FLIPPER',
-      'HIDE FLIGHTS',
-      'SHOW FLIGHTS',
-      'HIDE FORTUNE',
-      'SHOW FORTUNE',
-      'HIDE GAS',
-	  'SHOW GAS',
-      'HIDE JEOPARDY',
-      'SHOW JEOPARDY',
-      'HIDE LICE',
-      'SHOW LICE',
-      'HIDE LOCATION',
-      'SHOW LOCATION',
-      'HIDE LOTTERY',
-      'SHOW LOTTERY',
-      'HIDE LUCY',
-      'SHOW LUCY',
-      'HIDE MODULES',
-      'SHOW MODULES',
-      'HIDE MOON',
-      'SHOW MOON',
-      'HIDE NASA',
-      'SHOW NASA',
-      'HIDE NEO',
-      'SHOW NEO',
-      'HIDE NEWS',
-      'SHOW NEWS',
-      'HIDE PETFINDER',
-      'SHOW PETFINDER',
-      'HIDE PHONE',
-      'SHOW PHONE',
-      'HIDE PICTURES',
-      'SHOW PICTURES',
-      'HIDE PILOTS',
-      'SHOW PILOTS',
-      'HIDE SHIPPING',
-      'SHOW SHIPPING',
-      'HIDE STATION',
-      'SHOW STATION',
-      'HIDE STATS',
-      'SHOW STATS',
-      'HIDE SUNRISE',
-      'SHOW SUNRISE',
-      'HIDE SUDOKU',
-      'SHOW SUDOKU',
-      'HIDE TIDES',
-      'SHOW TIDES',
-      'HIDE TIMER',
-      'SHOW TIMER',
-      'HIDE TRAFFIC',
-      'SHOW TRAFFIC',
-      'HIDE TRIVIA',
-      'SHOW TRIVIA',
-      'HIDE VOICE',
-      'SHOW VOICE',
-      'HIDE WEATHER',
-      'SHOW WEATHER',
-      'HIDE WIND',
-      'SHOW WIND',
-      'HIDE PAGE ONE',
-      'SHOW PAGE ONE',
-	  'HIDE PAGE TWO',
-      'SHOW PAGE TWO',
-      'HIDE PAGE THREE',
-      'SHOW PAGE THREE',
-      'HIDE PAGE FOUR',
-      'SHOW PAGE FOUR',
-      'HIDE PAGE FIVE',
-      'SHOW PAGE FIVE',
-      'HIDE PAGE SIX',
-      'SHOW PAGE SIX',
-      'HIDE PAGE SEVEN',
-      'SHOW PAGE SEVEN',
-      'HIDE PAGE EIGHT',
-      'SHOW PAGE EIGHT',
-      'HIDE PAGE NINE',
-      'SHOW PAGE NINE',
-      'HIDE PAGE TEN',
-      'SHOW PAGE TEN',
-	  'HIDE MAIN PAGE',
-	  'SHOW MAIN PAGE',
-      'PLEASE WAKE UP',
-      'GO TO SLEEP',
-      'OPEN HELP',
-      'CLOSE HELP',
-	  'ACTIVATE ASSISTANT',
-	  'HIDE ASSISTANT',
-	  'SHOW ASSISTANT',
-	  'HIDE CHANNEL ONE',
-	  'SHOW CHANNEL ONE',
-  	  'HIDE CHANNEL WALL',
-	  'SHOW CHANNEL WALL',
-	  'HIDE CHANNEL TWO',
-	  'SHOW CHANNEL TWO',
-	  'HIDE CHANNEL THREE',
-	  'SHOW CHANNEL THREE',
-	  'HIDE CHANNEL FOUR',
-	  'SHOW CHANNEL FOUR',
-	  'HIDE CHANNEL FIVE',
-	  'SHOW CHANNEL FIVE',
-	  'SHOW CNN',
-	  'SHOW SKY NEWS',
-	  'HIDE TOOLS',
-	  'SHOW TOOLS',
-	  'HIDE FORECAST',
-	  'SHOW FORECAST',
-	  'GO ONLINE',
-	  'HIDE GHOST',
-	  'SHOW GHOST',
-	  'HIDE CAMERA',
-      'SHOW CAMERA',
-      'TAKE SELFIE',
-	  'ZOOM IN',
-	  'ZOOM OUT',
-	  'SHOW ME WIND',
-	  'SHOW ME RAIN',
-	  'SHOW ME CLOUDS',
-	  'SHOW ME TEMPERATURE',
-	  'SHOW ME PRESSURE',
-	  'SHOW ME CURRENTS',
-      'SHOW ME WAVES',
-      'SHOW DEFAULT ZOOM',
-      'ROTATE LAYER',
-      'PLAY ANIMATION',
-      'CANCEL ANIMATION'
-        ]
+    icon: 'fa-microphone-slash',                    /** @member {string} icon - Microphone icon. */
+    pulsing: true,                                  /** @member {boolean} pulsing - Flag to indicate listening state. */
+    help: false,                                    /** @member {boolean} help - Flag to switch between render help or not. */
+	timeout: null,                                  /** Done by @sdetweil to release mic from PocketSphinx */
+    	
+    voice: {                                        /** @member {Object} voice - Defines the default mode and commands of this module. */
+	mode: 'VOICE',                                  /** @property {string} mode - Voice mode of this module. */
+	sentences: []                                   /** @property {string[]} sentences - List of voice commands of this module. */
     },
 
-    /** @member {Object[]} modules - Set of all modules with mode and commands. */
-    modules: [],
-    /** @member - keep list of modules already hidden when sleep occurs */
-    previouslyHidden: [],
-    /**
-     * @member {Object} defaults - Defines the default config values.
-     * @property {int} timeout - Seconds to active listen for commands.
-     * @property {string} keyword - Keyword to activate active listening.
-     * @property {boolean} debug - Flag to enable debug information.
-     */
+    modules: [],                                    /** @member {Object[]} modules - Set of all modules with mode and commands. */
+    previouslyHidden: [],                           /** @member - keep list of modules already hidden when sleep occurs */
+
     defaults: {
-        timeout: 10,                            // timeout listening for a command/sentence
-        keyword: 'HELLO LUCY',                  // keyword to activate listening for a command/sentence
-        debug: false,                           // get debug information in console
-        standByMethod: 'DPMS',                  // 'DPMS' = anything else than RPi or 'PI'
-		sounds: ["female_hi.wav"],              // welcomesound at startup, add several for a random choice of welcome sound
-        startHideAll: true,                     // if true, all modules start as hidden
-        microphone: 0,                          // Please set correct microphone from the cat output after installation
-        speed: 1000,                            // transition speed between show/no-show/show in milliseconds
-		mainPageModules: ["MMM-VoiceControlMe"],// default modules to show on page one/startup
-        activateMotion: false,                  // if true, webcam will be used to activate/deactivate MM on movement
-        onlyHotword: false,                     // TBA - Hotword only to activate external module by sendNotification
-        timeoutSeconds: 10,                     // seconds to wait for external module to confirm control of mic
-        pageTwoModules: [],                     // modules to show on page two
-		pageThreeModules: [],                   // modules to show on page two
-		pageFourModules: [],                    // modules to show on page two
-		pageFiveModules: [],                    // modules to show on page two
-		pageSixModules: [],                     // modules to show on page two
-		pageSevenModules: [],                   // modules to show on page two
-		pageEightModules: [],                   // modules to show on page two
-		pageNineModules: [],                    // modules to show on page two
-		pageTenModules: [],                     // modules to show on page two
-		captureIntervalTime: 1000,              // how often should the webcam check for motion, in milliseconds, default 1 second
-        scoreThreshold: 20,                     // threshold to assume motion/no-motion -> se console log for score
-        timeoutMotion: 120000,                  // timeout with no motion until sleep monitor, in milliseconds, default 2 minutes
-        muteThreshold: 2000,                    // motion level to activate mute of speaker
-        muteVolumeLevel: 1,                     // what volume level to set speaker on activated mute
-        muteNormalLevel: 50,                    // set normal volume level on startup
-        muteTimer: 10000                        // how long in milliseconds to mute the speaker
+        timeout: 10,                                // timeout listening for a command/sentence
+        defaultOnStartup: 'MMM-VoiceControlMe',     // keep this so this module always are present on MM
+        keyword: 'HELLO LUCY',                      // keyword to activate listening for a command/sentence
+        debug: false,                               // get debug information in console
+        standByMethod: 'DPMS',                      // 'DPMS' = anything else than RPi or 'PI'
+		sounds: ["female_hi.wav"],                  // welcomesound at startup, add several for a random choice of welcome sound
+        startHideAll: true,                         // if true, all modules start as hidden
+        microphone: 0,                              // Please set correct microphone from the cat output after installation
+        speed: 1000,                                // transition speed between show/no-show/show in milliseconds
+        activateMotion: false,                      // if true, webcam will be used to activate/deactivate MM on movement
+        onlyHotword: false,                         // TBA - Hotword only to activate external module by sendNotification
+        timeoutSeconds: 10,                         // seconds to wait for external module to confirm control of mic
+		captureIntervalTime: 1000,                  // how often should the webcam check for motion, in milliseconds, default 1 second
+        scoreThreshold: 20,                         // threshold to assume motion/no-motion -> se console log for score
+        timeoutMotion: 120000,                      // timeout with no motion until sleep monitor, in milliseconds, default 2 minutes
+        muteThreshold: 2000,                        // motion level to activate mute of speaker
+        muteVolumeLevel: 1,                         // what volume level to set speaker on activated mute
+        muteNormalLevel: 50,                        // set normal volume level on startup
+        muteTimer: 10000,                           // how long in milliseconds to mute the speaker
+		mainPageModules: ["MMM-VoiceControlMe"],    // default modules to show on page one/startup
+        pageTwoModules: [],                         // modules to show on page two
+		pageThreeModules: [],                       // modules to show on page two
+		pageFourModules: [],                        // modules to show on page two
+		pageFiveModules: [],                        // modules to show on page two
+		pageSixModules: [],                         // modules to show on page two
+		pageSevenModules: [],                       // modules to show on page two
+		pageEightModules: [],                       // modules to show on page two
+		pageNineModules: [],                        // modules to show on page two
+		pageTenModules: []                          // modules to show on page two
     },
 
     lastTimeMotionDetected: null,
@@ -265,21 +101,13 @@ Module.register('MMM-VoiceControlMe', {
      * @override
      */
     start() {
-		Log.info(`Starting module: ${this.name}`);
+        var combinedSentences = importedSentences.concat(this.voice.sentences);
+        this.voice.sentences = combinedSentences;
+        Log.info(`Starting module: ${this.name}`);
         this.mode = this.translate('INIT');
         this.modules.push(this.voice);
         this.sendSocketNotification('RESTORE_MIC',this.config.muteNormalLevel);
         Log.info(`${this.name} is waiting for voice command registrations.`);
-		var pageOne = MM.getModules().withClass(this.config.mainPageModules);
-		var pageTwo = MM.getModules().withClass(this.config.pageTwoModules);
-		var pageThree = MM.getModules().withClass(this.config.pageThreeModules);
-		var pageFour = MM.getModules().withClass(this.config.pageFourModules);
-		var pageFive = MM.getModules().withClass(this.config.pageFiveModules);
-		var pageSix = MM.getModules().withClass(this.config.pageSixModules);
-		var pageSeven = MM.getModules().withClass(this.config.pageSevenModules);
-		var pageEight = MM.getModules().withClass(this.config.pageEightModules);
-		var pageNine = MM.getModules().withClass(this.config.pageNineModules);
-		var pageTen = MM.getModules().withClass(this.config.pageTenModules);
 
 		if (this.config.activateMotion) {
 			Log.info('DETECTOR: starting up');
@@ -315,7 +143,7 @@ Module.register('MMM-VoiceControlMe', {
                         _this.sendSocketNotification('MUTE_MIC',_this.config.muteVolumeLevel);
                             setTimeout(function(){ 
                                 Log.info('<<<>>> Restoring volume!!');
-                                _this.sendSocketNotification('RESTORE_MIC');
+                                _this.sendSocketNotification('RESTORE_MIC',_this.config.muteNormalLevel);
                             }, _this.config.muteTimer);
                     }
                     
@@ -344,23 +172,9 @@ Module.register('MMM-VoiceControlMe', {
 		}
     },
 
-
-    /**
-     * @function getStyles
-     * @description Style dependencies for this module.
-     * @override
-     * @returns {string[]} List of the style dependency filepaths.
-     */
     getStyles() {
         return ['font-awesome.css', 'MMM-VoiceControlMe.css'];
     },
-
-    /**
-     * @function getTranslations
-     * @description Translations for this module.
-     * @override
-     * @returns {Object.<string, string>} Available translations for this module (key: language code, value: filepath).
-     */
 
     getTranslations() {
         return {
@@ -369,13 +183,6 @@ Module.register('MMM-VoiceControlMe', {
             id: 'translations/id.json'
         };
     },
-
-    /**
-     * @function getDom
-     * @description Creates the UI as DOM for displaying in MagicMirror application.
-     * @override
-     * @returns {Element}
-     */
 
     getDom() {
         const wrapper = document.createElement('div');
@@ -425,16 +232,7 @@ Module.register('MMM-VoiceControlMe', {
 
         return wrapper;
     },
-
 ////////////////////////////////// EOC /////////////////////////////////
-
-    /**
-     * @function notificationReceived
-     * @description Handles incoming broadcasts from other modules or the MagicMirror core.
-     * @override
-     * @param {string} notification - Notification name
-     * @param {*} payload - Detailed payload of the notification.
-     */
 
     notificationReceived(notification, payload, sender) {
         var self=this;
@@ -518,6 +316,15 @@ Module.register('MMM-VoiceControlMe', {
                 var callback = function(){};
                 module.show(self.config.speed, callback);
 				});
+        }
+        
+        if (notification === 'DOM_OBJECTS_CREATED'){
+			var showOnStart = MM.getModules().withClass(self.config.defaultOnStartup);
+            
+            showOnStart.enumerate(function(module) {
+                var callback = function(){};
+                module.show(self.config.speed, callback);
+				});
 		}
 
 ////////////////////////////////////////////////////////////////////////
@@ -525,15 +332,13 @@ Module.register('MMM-VoiceControlMe', {
 //////////////// 		to show page one on alert 		////////////////
 ////////////////////////////////////////////////////////////////////////
 
-		if (notification === 'SHOW_ALERT') {				// Alarm clock rings, sends SHOW_ALERT, Receive it here and send SHOW_PAGE_ONE to node_helper of MMM-VoiceControlMe
+		if (notification === 'SHOW_ALERT') {
             var showOnStart = MM.getModules().withClass(self.config.mainPageModules);
             showOnStart.enumerate(function(module) {
                 var callback = function(){};
                 module.show(self.config.speed, callback);
 				});
 			}
-	//},
-
 
 ////////////////////////////////////////////////////////////////////////
 //////////////// 	   	   Enhanced by @TheStigh 		////////////////
@@ -552,14 +357,6 @@ Module.register('MMM-VoiceControlMe', {
 
 ////////////////////////////////// EOC /////////////////////////////////
 
-    /**
-     * @function socketNotificationReceived
-     * @description Handles incoming messages from node_helper.
-     * @override
-     *
-     * @param {string} notification - Notification name
-     * @param {*} payload - Detailed payload of the notification.
-     */
     socketNotificationReceived(notification, payload) {
         if (notification === 'READY') {
             //console.log(MMM-AssistantMk2.config.startChime);
@@ -603,6 +400,7 @@ Module.register('MMM-VoiceControlMe', {
             this.pulsing = false;
             this.debugInformation=" ";
             this.updateDom(100);
+
 		// tell other module to resume voice detection
             this.timeout=setTimeout(() => {                        // dummy code here for response from other module when done
                     Log.log("mic suspend timeout,  sending socket notification to RESUME_LISTENING")
@@ -671,7 +469,11 @@ Module.register('MMM-VoiceControlMe', {
             this.sendNotification('PLAYANIMATION');
             
         } else if (notification=== 'CANCEL_ANIMATION') {
-			this.sendNotification('CANCELANIMATION');
+            this.sendNotification('CANCELANIMATION');
+
+        } else if (notification === 'DEBUG') {
+            this.debugInformation = payload;
+            
 ////////////////////////////////////////////////////////////////////////
 /////////////// 	   	  Enhanced by @TheStigh to		////////////////
 ///////////////			show/hide by core messages 		////////////////
@@ -681,7 +483,8 @@ Module.register('MMM-VoiceControlMe', {
 
 		} else if (notification === "MODULE_STATUS") {
 			//console.log("Beskjed mottatt");
-			//Log.error(self.name + " received a module notification: " + notification);
+            //console.log("Beskjed var:"+payload.show);
+            //Log.error(self.name + " received a module notification: " + notification);
 			var hide = MM.getModules().withClass(payload.hide);
 			hide.enumerate(function(module) {
 				Log.log("Hide "+ module.name);
@@ -697,21 +500,21 @@ Module.register('MMM-VoiceControlMe', {
 				//var options = {lockString: self.identifier};
 				module.show(self.config.speed, callback);
 			});
-		
+        
+        } else if (notification === "MODULE_UPDATE") {
+            this.sendNotification(payload);
+            console.log('sendNoti received :'+payload);
+        
 ////////////////////////////////// EOC //////////////////////////////////
 
-	} else if (notification === 'DEBUG') {
-            this.debugInformation = payload;
         }
         this.updateDom(300);
     },
 
-    /**
-     * @function appendHelp
-     * @description Creates the UI for the voice command SHOW HELP.
-     *
-     * @param {Element} appendTo - DOM Element where the UI gets appended as child.
-     */
+    
+    /** @function appendHelp @description Creates the UI for the voice command SHOW HELP. */
+    /** @param {Element} appendTo - DOM Element where the UI gets appended as child. */
+     
     appendHelp(appendTo) {
         const title = document.createElement('h1');
         title.classList.add('xsmall'); // was medium @ Mykle
