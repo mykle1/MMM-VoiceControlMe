@@ -66,7 +66,7 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 
 ## Default modules and their commands
 
-* MMM-VoiceCommander - Hello Lucy (Replace Hello Lucy with your keyword)
+* MMM-VoiceCommander - Hello Lucy (Replace Hello Lucy with your keyword)<br>
                        Go Online (Must have MMM-AssistantMk2 installed)
                        Activate Assistant (Must have MMM-AssistantMk2 installed)
                        Show Assistant
