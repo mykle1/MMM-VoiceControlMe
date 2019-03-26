@@ -68,11 +68,11 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 
 ### MMM-VoiceCommander
 
-* Hello Lucy (Replace Hello Lucy with your keyword)
-* Go Online (Must have MMM-AssistantMk2 installed)
-* Activate Assistant (Must have MMM-AssistantMk2 installed)
-* Show Assistant
-* Hide Assistant
+* Hello Lucy - (Replace Hello Lucy with your keyword)
+* Go Online - (Must have MMM-AssistantMk2 installed)
+* Activate Assistant - (Must have MMM-AssistantMk2 installed)
+* Show Assistant - (Must have MMM-AssistantMk2 installed)
+* Hide Assistant - (Must have MMM-AssistantMk2 installed)
 * Go To Sleep
 * Please Wake Up
 * Open help
@@ -110,7 +110,9 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 * Rotate Layer
 * Play Animation
 * Cancel Animation
-                
+
+### Hide/Show Default modules
+
 * MMM-AfterShip - Hide/Show Shipping
 * MMM-ATM - Hide/Show Trivia
 * MMM-BMW-DS - Hide/Show Weather
