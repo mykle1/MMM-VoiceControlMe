@@ -93,7 +93,9 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 * Hide Camera
 * Selfie
                        
-### MMM-WindyV2 - Hide/Show Wind
+### MMM-WindyV2
+
+* Hide/Show Wind
 * Zoom In
 * Zoom Out
 * Show Default Zoom
