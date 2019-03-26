@@ -95,17 +95,18 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
                        
 ### MMM-WindyV2
 
-* Hide/Show Wind
+* Hide Wind
+* Show Wind
 * Zoom In
 * Zoom Out
 * Show Default Zoom
-* Show me wind
-* Show me rain
-* Show me clouds
-* Show me temperature
-* Show me pressure
-* Show me currents
-* Show me waves
+* Show Me Wind
+* Show Me Rain
+* Show Me Clouds
+* Show Me Temperature
+* Show Me Pressure
+* Show Me Currents
+* Show Me Waves
 * Rotate Layer
 * Play Animation
 * Cancel Animation
