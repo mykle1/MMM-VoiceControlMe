@@ -112,49 +112,49 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 * Cancel Animation
                 
 * MMM-AfterShip - Hide/Show Shipping
-* MMM-ATM         Hide/Show Trivia
-* MMM-BMW-DS      Hide/Show Weather
-* MMM-CARDS       Hide/Show Cards
-* MMM-Census      Hide/Show Census
-* MMM-Cocktails   Hide/Show Cocktails
-* MMM-EARTH       Hide/Show Earth
-* MMM-EarthWinds  Hide/Show EarthWind
-* MMM-EasyBack    Hide/Show Background
-* MMM-EasyPix     Hide/Show Lucy 
-* MMM-Events      Hide/Show Events
-* MMM-EventHorizon Hide/Show Timer
-* MMM-EyeCandy    Hide/Show EyeCandy
-* MMM-FMI         Hide/Show Phone
-* MMM-Fortune     Hide/Show Fortune
-* MMM-Gas         Hide/Show Gas
-* MMM-ISS         Hide/Show Station
-* MMM-JEOPARDY    Hide/Show Jeopardy
-* MMM-LICE        Hide/Show Lice
-* MMM-Lottery     Hide/Show Lottery
-* MMM-Lunartic    Hide/Show Moon
-* MMM-MARS        Hide/Show Mars
-* MMM-NASA        Hide/Show Nasa
-* MMM-NOAA3       Hide/Show Weather
-* MMM-PC-Stats    Hide/Show Stats
-* MMM-PetFinder   Hide/Show Pets
-* MMM-PilotWX     Hide/Show Pilots
-* MMM-SORT        Hide/Show Tides
-* MMM-SoundMachine Hide/Show SoundMachine
-* MMM-SunRiseSet  Hide/Show Sunrise
-* MMM-ToDoLive    Hide/Show Reminder
-* MMM-History     Hide/Show History
-* MMM-Astro       Hide/Show Horoscope
-* MMM-DailyQuotes Hide/Show Quote
-* MMM-Glock       Hide/Show Glock
+* MMM-ATM - Hide/Show Trivia
+* MMM-BMW-DS - Hide/Show Weather
+* MMM-CARDS - Hide/Show Cards
+* MMM-Census - Hide/Show Census
+* MMM-Cocktails - Hide/Show Cocktails
+* MMM-EARTH - Hide/Show Earth
+* MMM-EarthWinds - Hide/Show EarthWind
+* MMM-EasyBack - Hide/Show Background
+* MMM-EasyPix - Hide/Show Lucy 
+* MMM-Events - Hide/Show Events
+* MMM-EventHorizon - Hide/Show Timer
+* MMM-EyeCandy - Hide/Show EyeCandy
+* MMM-FMI - Hide/Show Phone
+* MMM-Fortune - Hide/Show Fortune
+* MMM-Gas - Hide/Show Gas
+* MMM-ISS - Hide/Show Station
+* MMM-JEOPARDY - Hide/Show Jeopardy
+* MMM-LICE - Hide/Show Lice
+* MMM-Lottery - Hide/Show Lottery
+* MMM-Lunartic - Hide/Show Moon
+* MMM-MARS - Hide/Show Mars
+* MMM-NASA - Hide/Show Nasa
+* MMM-NOAA3 - Hide/Show Weather
+* MMM-PC-Stats - Hide/Show Stats
+* MMM-PetFinder - Hide/Show Pets
+* MMM-PilotWX - Hide/Show Pilots
+* MMM-SORT - Hide/Show Tides
+* MMM-SoundMachine - Hide/Show SoundMachine
+* MMM-SunRiseSet - Hide/Show Sunrise
+* MMM-ToDoLive - Hide/Show Reminder
+* MMM-History - Hide/Show History
+* MMM-Astro - Hide/Show Horoscope
+* MMM-DailyQuotes - Hide/Show Quote
+* MMM-Glock - Hide/Show Glock
 
 ## MagicMirror Default modules
 
-* calendar        Hide/Show Calendar
-* clock           Hide/Show Clock
-* compliments     Hide/Show Compliments
-* currentweather  Hide/Show Current
-* newsfeed        Hide/Show Newsfeed
-* weatherforecast Hide/Show Forecast
+* calendar - Hide/Show Calendar
+* clock - Hide/Show Clock
+* compliments - Hide/Show Compliments
+* currentweather - Hide/Show Current
+* newsfeed - Hide/Show Newsfeed
+* weatherforecast - Hide/Show Forecast
 
 
 ## Any module and custom commands added by request
