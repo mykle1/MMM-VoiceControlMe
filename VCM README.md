@@ -113,7 +113,7 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 
 ### Hide/Show Default modules
 
-* MMM-AfterShip - Hide/Show Shipping
+* [MMM-AfterShip](https://github.com/mykle1/MMM-AfterShip) - Hide/Show Shipping
 * MMM-ATM - Hide/Show Trivia
 * MMM-BMW-DS - Hide/Show Weather
 * MMM-CARDS - Hide/Show Cards
