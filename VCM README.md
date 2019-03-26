@@ -15,10 +15,8 @@ No modification of other modules necessary.
 Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 
 
-## Who did this?
+## Thanks go to . . .
 
-This module is the result of a four developer collaboration.
-* @TheStigh was the driving force behind the idea and is this module's main contributor.
 * @sdetweil added crucial microphone release functionality to the module.
 * @Mykle1's original pages and hide/show commands were improved upon and custom sound support.
 * @cowboysdude for the "sentences" array and consultations on Skype.
