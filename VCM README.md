@@ -67,44 +67,44 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 ## Default modules and their commands
 
 * MMM-VoiceCommander - Hello Lucy (Replace Hello Lucy with your keyword)<br>
-                       Go Online (Must have MMM-AssistantMk2 installed)
-                       Activate Assistant (Must have MMM-AssistantMk2 installed)
-                       Show Assistant
-                       Hide Assistant
-                       Go To Sleep
-                       Please Wake Up
-                       Open help
-                       Close help
-                       Show Main Page
-                       Show Page Two
-                       Show Page Three
-                       Show Page Four
-                       Show Page Five
-                       Show Page Six
-                       Show Page Seven
-                       Show Page Eight
-                       Show Page Nine
-                       Show Page Ten
-                       Show Modules
-                       Hide Modules
-                       Show Camera
-                       Hide Camera
-                       Selfie
+&emsp;&emsp;&emsp;&emsp;Go Online (Must have MMM-AssistantMk2 installed)<br>
+                       Activate Assistant (Must have MMM-AssistantMk2 installed)<br>
+                       Show Assistant<br>
+                       Hide Assistant<br>
+                       Go To Sleep<br>
+                       Please Wake Up<br>
+                       Open help<br>
+                       Close help<br>
+                       Show Main Page<br>
+                       Show Page Two<br>
+                       Show Page Three<br>
+                       Show Page Four<br>
+                       Show Page Five<br>
+                       Show Page Six<br>
+                       Show Page Seven<br>
+                       Show Page Eight<br>
+                       Show Page Nine<br>
+                       Show Page Ten<br>
+                       Show Modules<br>
+                       Hide Modules<br>
+                       Show Camera<br>
+                       Hide Camera<br>
+                       Selfie<br>
                        
-* MMM-WindyV2 - Hide/Show Wind
-                Zoom In
-                Zoom Out
-                Show Default Zoom
-                Show me wind
-                Show me rain
-                Shoe me clouds
-                Show me temperature
-                Show me pressure
-                Show me currents
-                Show me waves
-                Rotate Layer
-                Play Animation
-                Cancel Animation
+* MMM-WindyV2 - Hide/Show Wind<br>
+                Zoom In<br>
+                Zoom Out<br>
+                Show Default Zoom<br>
+                Show me wind<br>
+                Show me rain<br>
+                Shoe me clouds<br>
+                Show me temperature<br>
+                Show me pressure<br>
+                Show me currents<br>
+                Show me waves<br>
+                Rotate Layer<br>
+                Play Animation<br>
+                Cancel Animation<br>
                 
 * MMM-AfterShip - Hide/Show Shipping
 * MMM-ATM         Hide/Show Trivia
