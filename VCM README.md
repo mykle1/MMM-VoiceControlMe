@@ -1,18 +1,18 @@
 # MMM-VoiceCommander
 
-Control other modules that use voice commands with a single microphone.
+* Control other modules that use voice commands with a single microphone.
 
-Built in motion detection for webcams. Puts your display to sleep or wakes it up.
+* Built in motion detection for webcams. Puts your display to sleep or wakes it up.
 
-Built in support for sound files for audio responses.
+* Built in support for sound files for audio responses.
 
-Hide and show pages of modules.
+* Hide and show pages of modules.
 
-Hide and show individual modules.
+* Hide and show individual modules.
 
-No modification of other modules necessary.
+* No modification of other modules necessary.
 
-Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
+* Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 
 
 ## Thanks go to . . .
@@ -66,13 +66,13 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 
 ## Default modules and their commands
 
-### MMM-VoiceCommander
+### [MMM-VoiceCommander](https://github.com/TheStigh/MMM-VoiceCommander)
 
-* Hello Lucy - (Replace Hello Lucy with your keyword)
-* Go Online - (Must have MMM-AssistantMk2 installed)
-* Activate Assistant - (Must have MMM-AssistantMk2 installed)
-* Show Assistant - (Must have MMM-AssistantMk2 installed)
-* Hide Assistant - (Must have MMM-AssistantMk2 installed)
+* Hello Lucy (Replace Hello Lucy with your keyword)
+* Go Online (Must have MMM-AssistantMk2 installed)
+* Activate Assistant (Must have MMM-AssistantMk2 installed)
+* Show Assistant
+* Hide Assistant
 * Go To Sleep
 * Please Wake Up
 * Open help
@@ -93,7 +93,7 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 * Hide Camera
 * Selfie
                        
-### MMM-WindyV2
+### [MMM-WindyV2](https://github.com/TheStigh/MMM-WindyV2)
 
 * Hide Wind
 * Show Wind
@@ -111,45 +111,49 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 * Play Animation
 * Cancel Animation
 
-### Hide/Show Default modules
+### Control [MMM-AssistantMk2](https://github.com/eouia/MMM-AssistantMk2)
+
+* Click [here](https://github.com/eouia/MMM-AssistantMk2) for the repo and documentation.
+
+### Hide/Show Default Modules
 
 * [MMM-AfterShip](https://github.com/mykle1/MMM-AfterShip) - Hide/Show Shipping
-* MMM-ATM - Hide/Show Trivia
-* MMM-BMW-DS - Hide/Show Weather
-* MMM-CARDS - Hide/Show Cards
-* MMM-Census - Hide/Show Census
-* MMM-Cocktails - Hide/Show Cocktails
-* MMM-EARTH - Hide/Show Earth
-* MMM-EarthWinds - Hide/Show EarthWind
-* MMM-EasyBack - Hide/Show Background
-* MMM-EasyPix - Hide/Show Lucy 
-* MMM-Events - Hide/Show Events
-* MMM-EventHorizon - Hide/Show Timer
-* MMM-EyeCandy - Hide/Show EyeCandy
-* MMM-FMI - Hide/Show Phone
-* MMM-Fortune - Hide/Show Fortune
-* MMM-Gas - Hide/Show Gas
-* MMM-ISS - Hide/Show Station
-* MMM-JEOPARDY - Hide/Show Jeopardy
-* MMM-LICE - Hide/Show Lice
-* MMM-Lottery - Hide/Show Lottery
-* MMM-Lunartic - Hide/Show Moon
-* MMM-MARS - Hide/Show Mars
-* MMM-NASA - Hide/Show Nasa
-* MMM-NOAA3 - Hide/Show Weather
-* MMM-PC-Stats - Hide/Show Stats
-* MMM-PetFinder - Hide/Show Pets
-* MMM-PilotWX - Hide/Show Pilots
-* MMM-SORT - Hide/Show Tides
-* MMM-SoundMachine - Hide/Show SoundMachine
-* MMM-SunRiseSet - Hide/Show Sunrise
-* MMM-ToDoLive - Hide/Show Reminder
-* MMM-History - Hide/Show History
-* MMM-Astro - Hide/Show Horoscope
-* MMM-DailyQuotes - Hide/Show Quote
-* MMM-Glock - Hide/Show Glock
+* [MMM-ATM](https://github.com/mykle1/MMM-ATM) - Hide/Show Trivia
+* [MMM-BMW-DS](https://github.com/mykle1/MMM-BMW-DS) - Hide/Show Weather
+* [MMM-CARDS](https://github.com/mykle1/MMM-CARDS) - Hide/Show Cards
+* [MMM-Census](https://github.com/mykle1/MMM-Census) - Hide/Show Census
+* [MMM-Cocktails](https://github.com/mykle1/MMM-Cocltails) - Hide/Show Cocktails
+* [MMM-EARTH](https://github.com/mykle1/MMM-EARTH) - Hide/Show Earth
+* [MMM-EarthWinds](https://github.com/mykle1/MMM-EarthWinds) - Hide/Show EarthWind
+* [MMM-EasyBack](https://github.com/mykle1/MMM-EasyBack) - Hide/Show Background
+* [MMM-EasyPix](https://github.com/mykle1/MMM-EasyPix) - Hide/Show Lucy 
+* [MMM-Events](https://github.com/mykle1/MMM-Events) - Hide/Show Events
+* [MMM-EventHorizon](https://github.com/mykle1/MMM-EventHorizon) - Hide/Show Timer
+* [MMM-EyeCandy](https://github.com/mykle1/MMM-EyeCandy) - Hide/Show EyeCandy
+* [MMM-FMI](https://github.com/mykle1/MMM-FMI) - Hide/Show Phone
+* [MMM-Fortune](https://github.com/mykle1/MMM-Fortune) - Hide/Show Fortune
+* [MMM-Gas](https://github.com/cowboysdude/MMM-Gas) - Hide/Show Gas
+* [MMM-ISS](https://github.com/mykle1/MMM-ISS) - Hide/Show Station
+* [MMM-JEOPARDY](https://github.com/mykle1/MMM-JEOPARDY) - Hide/Show Jeopardy
+* [MMM-LICE](https://github.com/mykle1/MMM-LICE) - Hide/Show Lice
+* [MMM-Lottery](https://github.com/mykle1/MMM-Lottery) - Hide/Show Lottery
+* [MMM-Lunartic](https://github.com/mykle1/MMM-Lunartic) - Hide/Show Moon
+* [MMM-MARS](https://github.com/mykle1/MMM-MARS) - Hide/Show Mars
+* [MMM-NASA](https://github.com/mykle1/MMM-NASA) - Hide/Show Nasa
+* [MMM-NOAA3](https://github.com/cowboysdude/MMM-NOAA3) - Hide/Show Weather
+* [MMM-PC-Stats](https://github.com/mykle1/MMM-PC-Stats) - Hide/Show Stats
+* [MMM-PetFinder](https://github.com/mykle1/MMM-PetFinder) - Hide/Show Pets
+* [MMM-PilotWX](https://github.com/mykle1/MMM-PilotWX) - Hide/Show Pilots
+* [MMM-SORT](https://github.com/mykle1/MMM-SORT) - Hide/Show Tides
+* [MMM-SoundMachine](https://github.com/mykle1/MMM-SoundMachine) - Hide/Show SoundMachine
+* [MMM-SunRiseSet](https://github.com/mykle1/MMM-SunRiseSet) - Hide/Show Sunrise
+* [MMM-ToDoLive](https://github.com/mykle1/MMM-ToDoLive) - Hide/Show Reminder
+* [MMM-History](https://github.com/cowboysdude/MMM-History) - Hide/Show History
+* [MMM-Astro](https://github.com/cowboysdude/MMM-Astro) - Hide/Show Horoscope
+* [MMM-DailyQuotes](https://github.com/cowboysdude/MMM-DailyQuotes) - Hide/Show Quote
+* [MMM-Glock](https://github.com/cowboysdude/MMM-Glock) - Hide/Show Glock
 
-## MagicMirror Default modules
+### MagicMirror Default modules
 
 * calendar - Hide/Show Calendar
 * clock - Hide/Show Clock
@@ -161,6 +165,6 @@ Offline by default. Online by controlling other modules. (Ex. AssistantMk2)
 
 ## Any module and custom commands added by request
 
-Simply post your reqest in the MMM-VoiceCommander topic.
-Name the module and the custom command you would like.
+* Simply post your reqest in the MMM-VoiceCommander topic.
+* Name the module and the custom command you would like.
                 
